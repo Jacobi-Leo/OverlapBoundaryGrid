@@ -4,7 +4,7 @@ FCFLAGS = -ggdb -c \
 	  -Wall -Wsurprising -Wextra -Wunderflow -pedantic \
 	  -fcheck=all \
 	  -fbacktrace \
-	  -std=f2003 \
+	  -std=f2003
 
 FCFLAGS_FALSE = -c -g -fdefault-real-8 
 
@@ -32,7 +32,7 @@ run: main
 	./main
 
 clean:
-	rm *.o *.mod
+	rm *.o *.mod *.dat
 
 cleanall:
 	rm main *.o *.mod 
