@@ -5,11 +5,13 @@ module repo
   !**********************************************************
   implicit none
   integer, parameter :: n=32 ! number of nodes of grid
-  integer, parameter :: m=10 ! number of overlapping level
-  integer, parameter :: iteration=300 ! number of iteration
+  integer, parameter :: m=2 ! Number of overlapping level
+  integer, parameter :: iteration=30000 ! number of iteration
   real, parameter :: pi = atan(1.0)*4.0 ! some mathematical constants
   real, parameter :: U0 = 1, L = 1, nu = 1.e-5 ! some physical constant
   real, parameter :: dt = 1.9e-3 ! some computation constant
+
+  
 contains
 
   subroutine ChebGridGenarator1dRightHalf (n, nodes, lengths)
@@ -27,6 +29,7 @@ contains
        nodes(i) = nodes(i-1) + lengths(i)
     enddo
   end subroutine ChebGridGenarator1dRightHalf
+  
 
   subroutine BoundaryOverlappingLeft (n, m, grid_size, grid_size_new)
     implicit none
@@ -34,11 +37,25 @@ contains
     real, intent(in), dimension(0:n+1) :: grid_size
     real, intent(out), dimension(0:n+1) :: grid_size_new
     integer :: i
-    grid_size_new = grid_size ! This can be optimized
-    do i = 2, m
-       grid_size_new(n-m+i) = grid_size(n-m+i) + grid_size(n-m+i-1)
+    grid_size_new = grid_size !!! This can be optimized
+    do i = 1, m-1
+       grid_size_new(m-i) = grid_size(m-i) + grid_size_new(m-i+1)
     end do
   end subroutine BoundaryOverlappingLeft
+  
+
+  subroutine BoundaryOverlappingRight (n, m, grid_size, grid_size_new)
+    implicit none
+    integer, intent(in) :: n, m
+    real, intent(in), dimension(0:n+1) :: grid_size
+    real, intent(out), dimension(0:n+1) :: grid_size_new
+    integer :: i
+    grid_size_new = grid_size !!! This can be optimized
+    do i = n-m+2, n
+       grid_size_new(i) = grid_size_new(i-1) + grid_size(i)
+    end do
+  end subroutine BoundaryOverlappingRight
+  
 
   subroutine Show1dGrid (n, nodes, lengths)
     implicit none
@@ -54,6 +71,7 @@ contains
        write(*,100) nodes(i), lengths(i)
     enddo
   end subroutine Show1dGrid
+  
 
   subroutine Converter (n, m, grid_size_new, u, u_new)
     ! From normal to overlapped grid
@@ -64,18 +82,19 @@ contains
     integer :: i
     real :: sum
 
-    sum = u(n-m+1)
+    sum = u(n-m+1)*grid_size_new(n-m+1)
 
     do i=0, n-m+1
        u_new(i) = u(i)
     end do
 
     do i=n-m+2, n
-       sum = sum + u(i)
+       sum = sum + u(i)*(grid_size_new(i)-grid_size_new(i-1)) !!! This can be optimized
        u_new(i) = sum / grid_size_new(i)
     end do
     u_new(n+1) = u_new(n)
   end subroutine Converter
+  
 
   subroutine ConverterReverse (n, m, grid_size_new, u, u_new)
     ! From overlapped to normal
