@@ -58,12 +58,7 @@ program main
   
   call ConverterReverse(n, m, grid_size_new, u_new, u_output)
   write(10, *) u_output(1:n)
-  
-  ! write(10, *) u(1:n)
-  ! write(10, *) u_new(1:n)
-
-  ! write(*,*) grid_size_new(1:n)
-
+    
   !! Forward Euler method
   do j = 1, iteration
      do i = 1, n-m+1
