@@ -99,7 +99,7 @@ program main
      write(10, *) u(1:n)
 
      u(0) = 2. - u(1)
-     u(n+1) = 0.
+     u(n+1) = 0. - u(n)
      u_new(0) = u(0)
      u_new(n+1) = u(n+1)
   enddo
