@@ -6,11 +6,11 @@ module repo
   implicit none
   integer, parameter :: n=32 ! number of nodes of grid
   integer, parameter :: m=1 ! Number of overlapping level
-  integer, parameter :: iteration=30000 ! number of iteration
+  integer, parameter :: iteration=300000 ! number of iteration
   real, parameter :: pi = atan(1.0)*4.0 ! some mathematical constants
   real, parameter :: U0 = 1, L = 1, nu = 1.e-5 ! some physical constant
-  real, parameter :: dt = 1.e-4 ! some computation constant
-  character(len=*), parameter:: rawoutfile = 'raw.dat'
+  real, parameter :: dt = 1.e-3 ! some computation constant
+  character(len=*), parameter:: rawoutfile = 'raw2.dat'
 
   
 contains
@@ -30,6 +30,22 @@ contains
        nodes(i) = nodes(i-1) + lengths(i)
     enddo
   end subroutine ChebGridGenarator1dRightHalf
+
+  subroutine UniformGridGenerator (n, nodes, lengths)
+    implicit none
+    integer, intent(in) :: n
+    real, intent(out), dimension(0:n) :: nodes
+    real, intent(out), dimension(n) :: lengths
+    integer :: i
+    real :: tmp
+
+    nodes(0) = 0.
+    tmp = 1. / real(n)
+    do i = 1, n
+       lengths(i) = tmp
+       nodes(i) = tmp * real(i)
+    end do
+  end subroutine UniformGridGenerator
   
 
   subroutine BoundaryOverlappingLeft (n, m, grid_size, grid_size_new)
