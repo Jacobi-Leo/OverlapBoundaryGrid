@@ -8,19 +8,21 @@ program main
   use fortran_gnuplot
   implicit none
 
-  real, allocatable, dimension(:) :: grid_node, grid_size, grid_size_new, u, u_new, u_tmp, u_output
+  real, allocatable, dimension(:) :: grid_node, grid_size, grid_size_new
+  real, allocatable, dimension(:) :: u, u_new, u_tmp, u_output, u_exact
   real, allocatable, dimension(:,:) :: xydata
   ! real, allocatable, dimension(:) :: De, Dw, Fe, Fw, Pe, Pw, aE, aW, aP
   real :: De, Dw, Fe, Fw, Pe, Pw, aE, aW
   integer :: i, j
 
   allocate(grid_node(0:n), grid_size(0:n+1), grid_size_new(0:n+1), &
-       &   u_tmp(n), xydata(n,2), u(0:n+1), u_new(0:n+1), u_output(0:n+1))
+       &   u_tmp(n), xydata(n,2), u(0:n+1), u_new(0:n+1), u_output(0:n+1), u_exact(0:n+1))
   
   ! allocate(De(n), Dw(n), Fe(n), Fw(n), Pe(n), &
   !      &   Pw(n), aE(n), aW(n), aP(n))
 
   !! Generate grid node
+  ! call UniformGridGenerator (n, grid_node, grid_size(1:n))
   call ChebGridGenarator1dRightHalf (n, grid_node, grid_size(1:n))
   grid_node = grid_node * L
   grid_size = grid_size * L
@@ -29,16 +31,20 @@ program main
   grid_size(0) = grid_size(1)
   grid_size(n+1) = grid_size(n)
   
-  open(10,status='replace', file=rawoutfile, action='write')
+  open(10, status='replace', file=rawoutfile, action='write')
   open(11, status='replace', file='grid.dat', action='write')
   write(11,*) grid_node(1:n) - 0.5*grid_size(1:n)
 
-  ! write(*,*) grid_size(1:n)
+  do i=1,n
+     u_exact(i) = (1. - exp((grid_node(i)-0.5*grid_size(i) - 1.)/nu))/(1. - exp(-1./nu))
+  end do
+  u_exact(0) = 2. - u_exact(1)
+  u_exact(n+1) = 0. - u_exact(n)
 
   do i=1,n
      u(i) = u0*(L-grid_node(i)+0.5*grid_size(i))
   enddo
-  !! The following equations are simplified version
+  !! The following two equations are simplified version
   u(0) = 2. - u(1)
   u(n+1) = 0. - u(n)
 
@@ -93,7 +99,7 @@ program main
      write(10, *) u(1:n)
 
      u(0) = 2. - u(1)
-     u(n+1) = -u(n)
+     u(n+1) = 2. - u(n)
      u_new(0) = u(0)
      u_new(n+1) = u(n+1)
   enddo

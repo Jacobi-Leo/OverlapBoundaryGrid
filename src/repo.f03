@@ -5,10 +5,10 @@ module repo
   !**********************************************************
   implicit none
   integer, parameter :: n=32 ! number of nodes of grid
-  integer, parameter :: m=1 ! Number of overlapping level
-  integer, parameter :: iteration=300000 ! number of iteration
+  integer, parameter :: m=10 ! Number of overlapping level
+  integer, parameter :: iteration=300 ! number of iteration
   real, parameter :: pi = atan(1.0)*4.0 ! some mathematical constants
-  real, parameter :: U0 = 1, L = 1, nu = 1.e-5 ! some physical constant
+  real, parameter :: U0 = 1, L = 1, nu = 0.1 ! some physical constant
   real, parameter :: dt = 1.e-3 ! some computation constant
   character(len=*), parameter:: rawoutfile = 'raw2.dat'
 
