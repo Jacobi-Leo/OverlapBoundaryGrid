@@ -41,30 +41,32 @@ point_set.append(points2)
 #ani = animation.FuncAnimation(fig, update, points, interval=2*10)
 #plt.show()
 
-fig = plt.figure()
+plt.plot(grid, points2[50])
 
-ax = plt.axes(xlim=(0, 1), ylim=(0, 1))
+# fig = plt.figure()
 
-N = 2
-lines = [plt.plot([], [], 'o-')[0] for _ in range(N)]
+# ax = plt.axes(xlim=(0, 1), ylim=(0, 1))
 
-def init():
-    for line in lines:
-        line.set_data([], [])
-    return lines
+# N = 2
+# lines = [plt.plot([], [], 'o-')[0] for _ in range(N)]
 
-def animate(i):
-    for j,line in enumerate(lines):
-        line.set_xdata(grid)
-        line.set_ydata(point_set[j][i])
-    return lines
+# def init():
+#     for line in lines:
+#         line.set_data([], [])
+#     return lines
 
-# Set up format files for movie
-Writer = animation.writers['ffmpeg']
-writer = Writer(fps=20, metadata=dict(artist='Z. Y. Liu'), bitrate=1800)
+# def animate(i):
+#     for j,line in enumerate(lines):
+#         line.set_xdata(grid)
+#         line.set_ydata(point_set[j][i])
+#     return lines
 
-anim = animation.FuncAnimation(fig, animate, init_func=init,
-                               interval=20, blit=True)
+# # Set up format files for movie
+# Writer = animation.writers['ffmpeg']
+# writer = Writer(fps=20, metadata=dict(artist='Z. Y. Liu'), bitrate=1800)
+
+# anim = animation.FuncAnimation(fig, animate, init_func=init,
+#                                interval=20, blit=True)
 
 plt.show()
 
