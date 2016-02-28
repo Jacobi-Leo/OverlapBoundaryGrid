@@ -5,11 +5,12 @@ module repo
   !**********************************************************
   implicit none
   integer, parameter :: n=32 ! number of nodes of grid
-  integer, parameter :: m=2 ! Number of overlapping level
+  integer, parameter :: m=1 ! Number of overlapping level
   integer, parameter :: iteration=30000 ! number of iteration
   real, parameter :: pi = atan(1.0)*4.0 ! some mathematical constants
   real, parameter :: U0 = 1, L = 1, nu = 1.e-5 ! some physical constant
-  real, parameter :: dt = 1.9e-3 ! some computation constant
+  real, parameter :: dt = 1.e-4 ! some computation constant
+  character(len=*), parameter:: rawoutfile = 'raw.dat'
 
   
 contains
@@ -92,7 +93,7 @@ contains
        sum = sum + u(i)*(grid_size_new(i)-grid_size_new(i-1)) !!! This can be optimized
        u_new(i) = sum / grid_size_new(i)
     end do
-    u_new(n+1) = u_new(n)
+    u_new(n+1) = u(n+1)
   end subroutine Converter
   
 
@@ -111,7 +112,7 @@ contains
     do i=n-m+2, n
        u_new(i) = (u(i)*grid_size_new(i) - u(i-1)*grid_size_new(i-1)) / (grid_size_new(i) - grid_size_new(i-1))
     end do
-    u_new(n+1) = u_new(n)
+    u_new(n+1) = u(n+1)
   end subroutine ConverterReverse
   
 
