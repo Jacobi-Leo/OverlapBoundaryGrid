@@ -47,19 +47,18 @@ program main
   !! The following two equations are simplified version
   u(0) = 2. - u(1)
   u(n+1) = 0. - u(n)
+  
+  write(10, *) u(1:n)
 
   
   call BoundaryOverlappingRight (n, m, grid_size, grid_size_new)
   call Converter(n, m, grid_size_new, u, u_new)
-  
-  call ConverterReverse(n, m, grid_size_new, u_new, u_output)
-  write(10, *) u_output(1:n)
     
   !! Forward Euler method
   do j = 1, iteration
      do i = 1, n-m
-        De = nu/(0.5*(grid_size(i)+grid_size(i+1)))
-        Dw = nu/(0.5*(grid_size(i)+grid_size(i-1)))
+        De = nu/(0.5*(grid_size_new(i)+grid_size_new(i+1)))
+        Dw = nu/(0.5*(grid_size_new(i)+grid_size_new(i-1)))
         Fe = 1.0
         Fw = -1.0
         Pe = Fe/De
