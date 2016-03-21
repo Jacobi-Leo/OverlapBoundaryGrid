@@ -58,20 +58,20 @@ program main
   ! !! Forward Euler method
   iterations: do j = 1, iteration
      do i = 1, n-m
-        uplus = findu(grid_node, u, n, i, f1, f2)
+        uplus = findu(grid_node, u, n, i)
         
         if ( i == 1 ) then
            uminus = 1.
         else
-           uminus = findu(grid_node, u, n, i-1, f1, f2)
+           uminus = findu(grid_node, u, n, i-1)
         end if
         
-        uxplus = findux(grid_node, u, n, i, g1, g2)
+        uxplus = findux(grid_node, u, n, i)
         
         if ( i == 1 ) then
            uxminus = (u(1)-u(0)) / grid_size(0)
         else
-           uminus = findux(grid_node, u, n, i-1, g1, g2)
+           uminus = findux(grid_node, u, n, i-1)
         end if
         
         u_tmp(i) = u(i) + dt/grid_size(i)*(U0*(uminus-uplus)+nu*(uxplus-uxminus))
@@ -81,12 +81,12 @@ program main
         if ( i == n ) then
            uplus = 0.
         else
-           uplus = findu(grid_node, u, n, i, f1, f2)
+           uplus = findu(grid_node, u, n, i)
         end if
         
-        uminus = findu(grid_node, u, n, n-m, f1, f2)
-        uxplus = findux(grid_node, u, n, i, g1, g2)
-        uxminus = findux(grid_node, u, n, n-m, g1, g2)
+        uminus = findu(grid_node, u, n, n-m)
+        uxplus = findux(grid_node, u, n, i)
+        uxminus = findux(grid_node, u, n, n-m)
         u_tmp(i) = u_new(i) + dt/grid_size_new(i)*(U0*(uminus-uplus)+nu*(uxplus-uxminus))
      end do
      
@@ -98,6 +98,7 @@ program main
      write(10, *) u(1:n)
   end do iterations
 
+  write(*,*) "Drawing..."
   xydata(:,1) = grid_node(1:n) - 0.5*grid_size(1:n)
   xydata(:,2) = u(1:n)
   xydata2(:,1) = xydata(:,1)
